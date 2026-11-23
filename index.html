@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Expedientes · Análisis del sustantivo (3.er ciclo · experto)</title>
+<meta name="author" content="Elena Velasco Fernández de Bobadilla · Con Ceras o Maderas">
+<meta name="license" content="CC BY-NC-SA 4.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fredoka:wght@500;600;700&family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{
+  --ink:#1E2240;--navy:#232A5C;--navy2:#151A3D;--a:#3F46D6;--folder:#F4DDA8;--folder-d:#D9B66B;--paper:#FFFDF6;
+  --ok:#2DBE6C;--ok-d:#1E8F4E;--ko:#F2545B;--ko-d:#B8343A;--miss:#FFB020;
+  font-family:'Andika',system-ui,sans-serif,'Noto Color Emoji';color:var(--ink);
+  background:#EEF0F8;background-image:radial-gradient(#D9DDF0 2px,transparent 2.5px);background-size:26px 26px;
+  -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;touch-action:manipulation;
+}
+button{font-family:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.emo{font-family:'Noto Color Emoji','Andika',sans-serif}
+.wrap{max-width:1150px;margin:0 auto;padding:16px}
+.hidden{display:none!important}
+
+/* barra superior */
+.bar{background:var(--navy);color:#fff;position:sticky;top:0;z-index:10;box-shadow:0 4px 0 var(--navy2)}
+.bar .wrap{display:flex;align-items:center;gap:12px;padding:10px 16px}
+.bar h1{font-family:'Fredoka';font-weight:700;font-size:clamp(20px,3vw,30px);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar h1 small{font-size:.55em;background:#FFD23F;color:var(--navy);border-radius:8px;padding:1px 8px;margin-left:6px;vertical-align:middle}
+.bbtn{height:44px;min-width:44px;padding:0 12px;border-radius:13px;background:#ffffff22;color:#fff;font-weight:700;font-size:17px;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.bbtn:active{transform:translateY(2px)}
+.bbtn.ask{background:var(--ko)}
+.pill{background:#FFD23F;color:var(--navy);font-family:'Fredoka';font-weight:700;border-radius:999px;padding:6px 14px;font-size:18px;white-space:nowrap}
+
+/* menú */
+.rank{display:flex;align-items:center;gap:16px;background:#fff;border-radius:24px;padding:16px 20px;box-shadow:0 6px 0 #0000000f;margin-top:8px}
+.rank .badge{font-size:54px;line-height:1}
+.rank b{font-family:'Fredoka';font-size:clamp(22px,3vw,30px)}
+.rank .meter{height:16px;background:#E6E8F5;border-radius:999px;margin-top:8px;overflow:hidden}
+.rank .meter i{display:block;height:100%;background:linear-gradient(90deg,#3F46D6,#8B5CF6);border-radius:999px}
+.rank small{opacity:.7;font-size:15px}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.how div{background:#fff;border-radius:20px;padding:14px 16px;box-shadow:0 5px 0 #0000000f;font-size:clamp(15px,1.8vw,18px);line-height:1.35}
+.how h3{font-family:'Fredoka';font-size:clamp(18px,2.2vw,22px);margin-bottom:4px}
+.level{margin-top:22px;background:#fff;border-radius:26px;padding:16px;box-shadow:0 6px 0 #0000000f}
+.lhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between}
+.lhead h2{font-family:'Fredoka';font-size:clamp(20px,2.8vw,28px)}
+.lhead p{opacity:.75;font-size:16px}
+.safe{display:flex;align-items:center;gap:6px;background:var(--navy);color:#fff;border-radius:16px;padding:8px 12px;font-family:'Fredoka';font-weight:700}
+.safe span{display:grid;place-items:center;width:34px;height:40px;border-radius:9px;background:#ffffff1f;font-size:22px}
+.safe span.open{background:#FFD23F;color:var(--navy)}
+.safe.done{background:var(--ok)}
+.files{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+.file{position:relative;background:var(--folder);border-radius:6px 18px 18px 18px;padding:22px 12px 14px;text-align:center;box-shadow:0 6px 0 var(--folder-d);font-family:'Fredoka';font-weight:600;font-size:clamp(16px,2vw,20px)}
+.file::before{content:'';position:absolute;left:0;top:-12px;width:45%;height:16px;background:var(--folder);border-radius:8px 8px 0 0}
+.file:active{transform:translateY(4px);box-shadow:0 2px 0 var(--folder-d)}
+.file .num{font-size:.8em;opacity:.7;display:block}
+.file .st{display:block;margin-top:4px;font-size:1.1em}
+.file.done{background:#CFEFD9;box-shadow:0 6px 0 #8FCFA6}
+.file.done::before{background:#CFEFD9}
+
+footer{margin-top:26px;border-top:2px solid #E2E0EC;background:#fff;padding:14px 18px;font-size:.95rem;color:#5b6370;display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;justify-content:space-between;border-radius:18px 18px 0 0}
+footer a{color:inherit}
+#visitas img{height:22px;vertical-align:middle}
+
+/* expediente */
+.steps{display:flex;gap:8px;margin:6px 0 14px}
+.steps div{flex:1;text-align:center;padding:10px 6px;border-radius:14px;background:#fff;font-family:'Fredoka';font-weight:600;font-size:clamp(14px,1.9vw,19px);opacity:.55;box-shadow:0 4px 0 #0000000f}
+.steps div.on{opacity:1;background:var(--a);color:#fff;box-shadow:0 4px 0 #2A30A8}
+.steps div.ok{opacity:1;background:#CFEFD9}
+.sheet{background:var(--paper);border-radius:26px;padding:clamp(16px,3vw,30px);box-shadow:0 8px 0 #0000001a,inset 0 0 0 2px #EADFC4;position:relative}
+.sheet .tag{position:absolute;top:-14px;left:24px;background:var(--navy);color:#FFD23F;font-family:'Fredoka';font-weight:700;padding:4px 14px;border-radius:10px;font-size:16px;transform:rotate(-2deg)}
+.instr{display:flex;align-items:center;gap:12px;font-family:'Fredoka';font-weight:600;font-size:clamp(19px,2.6vw,28px);margin-bottom:6px}
+.sub{font-size:clamp(15px,1.9vw,19px);opacity:.75;margin-bottom:16px}
+.spk{flex:0 0 auto;width:48px;height:48px;border-radius:50%;background:#FFC23D;font-size:24px;box-shadow:0 4px 0 #0000002a;display:grid;place-items:center}
+.txt{font-size:clamp(24px,3.6vw,42px);line-height:2.05;text-align:left}
+.w{display:inline;border-radius:12px;padding:.05em .18em;margin:0 -.02em;transition:background .12s;cursor:pointer;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.w:hover{background:#EEF0FF}
+.pu{margin-left:-.18em}
+.w.sel{background:#DDE0FF;box-shadow:inset 0 -.18em 0 var(--a)}
+.w.good{background:#CFEFD9;box-shadow:inset 0 -.18em 0 var(--ok)}
+.w.bad{background:#FDD9DB;box-shadow:inset 0 -.18em 0 var(--ko);text-decoration:line-through;text-decoration-color:#B8343A88}
+.w.miss{background:#FFE9B8;box-shadow:inset 0 -.18em 0 var(--miss)}
+.w.hl{background:#FFE36E;box-shadow:inset 0 -.18em 0 #E0A800;font-weight:700}
+.w.dis{cursor:default}
+.w.dis:hover{background:none}
+.w.sel.dis:hover{background:#DDE0FF}
+.actions{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px;align-items:center}
+.btn{font-family:'Fredoka';font-weight:600;font-size:clamp(18px,2.2vw,24px);padding:12px 26px;border-radius:18px;background:var(--a);color:#fff;box-shadow:0 5px 0 #2A30A8}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #2A30A8}
+.btn:disabled{opacity:.4;cursor:default;transform:none}
+.btn.alt{background:var(--navy);box-shadow:0 5px 0 var(--navy2)}
+.btn.go{background:var(--ok);box-shadow:0 5px 0 var(--ok-d)}
+.count{margin-right:auto;font-size:18px;opacity:.75}
+.notes{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.note{border-radius:14px;padding:10px 14px;font-size:clamp(15px,1.9vw,19px);line-height:1.35;display:flex;gap:10px;align-items:flex-start}
+.note.ok{background:#E3F8EC}.note.ko{background:#FDE7E8}.note.miss{background:#FFF1D1}.note.info{background:#E9EBFF}
+.note b{white-space:nowrap}
+
+/* ficha */
+.ctx{font-size:clamp(18px,2.4vw,26px);line-height:1.8;background:#fff;border-radius:16px;padding:10px 16px;margin-bottom:14px;box-shadow:inset 0 0 0 2px #EADFC4}
+.fcard{display:grid;grid-template-columns:auto 1fr;gap:12px 18px;align-items:center;background:#fff;border-radius:20px;padding:18px;box-shadow:inset 0 0 0 3px #E6E8F5}
+.fword{grid-column:1/-1;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px dashed #D8DBEE;padding-bottom:10px;margin-bottom:4px}
+.fword b{font-size:clamp(30px,4.6vw,52px)}
+.fword span{font-size:18px;opacity:.7}
+.rlab{font-family:'Fredoka';font-weight:600;font-size:clamp(15px,1.9vw,19px);opacity:.7}
+.ropts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ch{font-weight:700;font-size:clamp(17px,2.3vw,26px);padding:10px 8px;border-radius:14px;background:#F1F2FA;box-shadow:0 4px 0 #D9DCEC}
+.ch.sel{background:var(--a);color:#fff;box-shadow:0 4px 0 #2A30A8}
+.ch.good{background:var(--ok);color:#fff;box-shadow:0 4px 0 var(--ok-d)}
+.ch.bad{background:var(--ko);color:#fff;box-shadow:0 4px 0 var(--ko-d)}
+.ch.right{box-shadow:0 0 0 4px var(--ok),0 4px 0 #D9DCEC}
+.ch:disabled{cursor:default}
+.prog{font-family:'Fredoka';font-weight:600;font-size:18px;opacity:.8}
+
+/* reto */
+.clue{background:var(--navy);color:#fff;border-radius:20px;padding:16px 20px;margin-bottom:18px;font-size:clamp(19px,2.6vw,28px);line-height:1.35}
+.clue b{color:#FFD23F}
+
+/* resumen */
+.sum{text-align:center}
+.sum .stars{font-size:clamp(48px,8vw,80px);letter-spacing:.1em}
+.sum .stars .off{filter:grayscale(1);opacity:.25}
+.sum h2{font-family:'Fredoka';font-size:clamp(28px,4vw,44px);margin:6px 0}
+.rows{max-width:520px;margin:14px auto;display:flex;flex-direction:column;gap:6px;font-size:clamp(16px,2vw,20px)}
+.rows div{display:flex;justify-content:space-between;background:#fff;border-radius:12px;padding:8px 14px}
+.rows div.tot{background:var(--navy);color:#fff;font-weight:700}
+.digit{display:inline-flex;align-items:center;gap:12px;background:#FFD23F;color:var(--navy);border-radius:18px;padding:10px 18px;font-family:'Fredoka';font-weight:700;font-size:clamp(20px,2.8vw,28px);margin-top:8px;animation:pop .5s}
+.digit span{background:var(--navy);color:#FFD23F;border-radius:10px;padding:2px 14px;font-size:1.3em}
+.vault{font-size:clamp(18px,2.4vw,24px);margin-top:12px;background:#CFEFD9;border-radius:16px;padding:12px}
+.conf{position:fixed;top:-20px;width:12px;height:18px;border-radius:3px;z-index:50;pointer-events:none;animation:fall linear forwards}
+
+/* misión */
+.mission{margin-top:22px;background:var(--navy);color:#fff;border-radius:26px;padding:20px;box-shadow:0 6px 0 var(--navy2)}
+.mission h2{font-family:'Fredoka';font-size:clamp(22px,3vw,32px);color:#FFD23F}
+.mission .story{font-size:clamp(16px,2vw,20px);line-height:1.4;margin:6px 0 14px;opacity:.95}
+.cl{display:flex;gap:12px;align-items:center;background:#ffffff14;border-radius:16px;padding:12px 14px;margin-top:8px;font-size:clamp(16px,2vw,20px);line-height:1.35}
+.cl .emo{font-size:28px}
+.cl.lock{opacity:.6}
+.cl b{color:#FFD23F}
+.sus{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.sc{background:var(--paper);color:var(--ink);border-radius:20px;padding:14px;text-align:left;box-shadow:0 5px 0 #0004;display:flex;flex-direction:column;gap:6px;font-size:clamp(14px,1.7vw,17px)}
+.sc .face{font-size:44px;text-align:center}
+.sc h3{font-family:'Fredoka';font-size:clamp(18px,2.2vw,23px);text-align:center}
+.sc .lbl{font-weight:700;font-size:.85em;opacity:.65;text-transform:uppercase;letter-spacing:.04em}
+.sc .note2{font-style:italic;background:#FFF3C4;border-radius:10px;padding:6px 8px}
+.sc button{margin-top:auto;background:var(--ko);color:#fff;font-family:'Fredoka';font-weight:600;font-size:18px;border-radius:14px;padding:10px;box-shadow:0 4px 0 var(--ko-d)}
+.sc button:disabled{opacity:.35;cursor:default}
+.sc.wrong{opacity:.55}
+.sc.right{box-shadow:0 0 0 5px #FFD23F,0 5px 0 #0004}
+.mres{margin-top:14px}
+button.safe{cursor:pointer;animation:glow 1.2s ease-in-out infinite alternate}
+@keyframes glow{to{box-shadow:0 0 0 6px #FFD23F88}}
+.modal{position:fixed;inset:0;background:#151A3Dcc;z-index:40;display:grid;place-items:center;padding:16px}
+.mbox{background:var(--paper);border-radius:26px;padding:22px;max-width:420px;width:100%;text-align:center;box-shadow:0 10px 0 #0005;animation:pop .3s}
+.mbox h3{font-family:'Fredoka';font-size:26px}
+.disp{display:flex;gap:10px;justify-content:center;margin:14px 0}
+.disp span{width:56px;height:68px;border-radius:14px;background:var(--navy);color:#FFD23F;font-family:'Fredoka';font-weight:700;font-size:38px;display:grid;place-items:center}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.keys button{font-family:'Fredoka';font-weight:700;font-size:30px;padding:12px;border-radius:16px;background:#fff;box-shadow:0 4px 0 #D9DCEC}
+.keys button:active{transform:translateY(3px)}
+.dip{background:#fff;border:10px double #D9B66B;border-radius:20px;padding:26px;max-width:720px;width:100%;text-align:center;animation:pop .4s}
+.dip h2{font-family:'Fredoka';font-size:clamp(26px,4vw,40px);color:var(--navy)}
+.dip input{font:inherit;font-size:clamp(22px,3vw,32px);text-align:center;border:0;border-bottom:3px dashed #D9B66B;width:90%;margin:10px 0;padding:4px;background:none}
+.dip p{font-size:clamp(16px,2vw,20px);line-height:1.45}
+@media print{body *{visibility:hidden}.dip,.dip *{visibility:visible}.dip{position:fixed;inset:20px}.dip .noprint{display:none}}
+@media (max-width:820px){.sus{grid-template-columns:repeat(2,1fr)}}
+@keyframes pop{from{transform:scale(.9);opacity:.2}to{transform:none;opacity:1}}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-5px)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+.shake{animation:shake .4s}
+@media (max-width:820px){.files{grid-template-columns:repeat(2,1fr)}.how{grid-template-columns:1fr}}
+@media (max-width:560px){.fcard{grid-template-columns:1fr}.rlab{margin-bottom:-6px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="bar"><div class="wrap">
+  <button class="bbtn hidden" id="back">⬅ Expedientes</button>
+  <h1 id="title">🕵️ Expedientes <small>3.er ciclo · experto</small></h1>
+  <span class="pill hidden" id="pts">0 pts</span>
+  <button class="bbtn emo" id="mute" title="Sonido">🔊</button>
+  <button class="bbtn emo" id="full" title="Pantalla completa">⛶</button>
+</div></div>
+
+<!-- ============ MENÚ ============ -->
+<main class="wrap" id="menu">
+  <div class="rank" id="rank"></div>
+  <div class="how">
+    <div><h3>🔎 1. Localiza</h3>Toca <b>todos</b> los sustantivos del texto. No sabes cuántos hay… ¡y hay trampas!</div>
+    <div><h3>📋 2. Analiza</h3>Rellena la <b>ficha en blanco</b> de los sustantivos marcados: tipo, género y número.</div>
+    <div><h3>🎯 3. Reto final</h3>Encuentra en el texto el sustantivo que encaja con una <b>descripción</b>.</div>
+  </div>
+  <div id="levels"></div>
+  <footer>
+    <span>© 2026 <b>Con Ceras o Maderas</b> · <a href="https://www.instagram.com/con_ceras_o_maderas/" target="_blank" rel="noopener">@con_ceras_o_maderas</a></span>
+    <span>Material gratuito bajo licencia
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="license noopener">CC BY-NC-SA 4.0</a>:
+      puedes usarlo y compartirlo citando la autoría, sin fines comerciales.</span>
+    <span id="visitas"></span>
+  </footer>
+</main>
+
+<!-- ============ EXPEDIENTE ============ -->
+<main class="wrap hidden" id="case">
+  <div class="steps" id="steps"><div>🔎 1. Localiza</div><div>📋 2. Analiza</div><div>🎯 3. Reto</div></div>
+  <section class="sheet" id="sheet"></section>
+</main>
+
+<script>
+/* ================= utilidades ================= */
+const $=(s,el=document)=>el.querySelector(s);
+const $$=(s,el=document)=>[...el.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=a=>a[Math.random()*a.length|0];
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const P='exp6-';
+let muted=store.get(P+'mute')==='1';
+let AC=null;
+function ac(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume()}catch(e){}}
+function tone(fs,dur=.1,type='triangle',vol=.15){if(muted||!AC)return;let t=AC.currentTime+.01;
+  fs.forEach(f=>{const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(vol,t);
+  g.gain.exponentialRampToValueAtTime(.001,t+dur*1.6);o.connect(g).connect(AC.destination);o.start(t);o.stop(t+dur*1.7);t+=dur})}
+const sfx={tap:()=>tone([520],.04,'sine',.07),good:()=>tone([660,880,1175],.09),bad:()=>tone([260,190],.15,'square',.06),
+  win:()=>tone([523,659,784,1047,784,1047],.12,'triangle',.17),open:()=>tone([392,523,659,784,1047,1319],.1,'triangle',.18)};
+const canSpeak='speechSynthesis' in window;
+function say(t){if(!canSpeak)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='es-ES';u.rate=.9;speechSynthesis.speak(u)}catch(e){}}
+function confetti(){const cols=['#F2545B','#FFD23F','#2DBE6C','#3F46D6','#8B5CF6','#FF8A3D'];
+  for(let i=0;i<80;i++){const s=document.createElement('span');s.className='conf';s.style.left=Math.random()*100+'vw';s.style.background=pick(cols);
+  s.style.animationDuration=(1.8+Math.random()*1.8)+'s';s.style.animationDelay=(Math.random()*.5)+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),4500)}}
+
+/* ================= RASGOS ================= */
+/* orden de la ficha: tipo (4 rasgos), género, número */
+const FEAT=[
+ {k:'pc',lab:'Común o propio',v:{c:'común',p:'propio'},why:{c:'nombra a cualquiera de su clase',p:'nombra a un ser o lugar concreto y lleva mayúscula'}},
+ {k:'ca',lab:'Concreto o abstracto',v:{co:'concreto',ab:'abstracto'},why:{co:'se percibe con los sentidos',ab:'es una idea, un sentimiento o una cualidad: no se percibe con los sentidos'}},
+ {k:'ic',lab:'Individual o colectivo',v:{i:'individual',col:'colectivo'},why:{i:'en singular nombra un solo ser, objeto o idea',col:'en singular nombra un conjunto'}},
+ {k:'cn',lab:'Contable o no contable',v:{ct:'contable',nc:'no contable'},why:{ct:'se puede contar: «dos, tres…»',nc:'no se cuenta, se mide: «mucho, mucha, un poco de…»'}},
+ {k:'ge',lab:'Género',v:{m:'masculino',f:'femenino'},why:{m:'va con «el», «un»',f:'va con «la», «una»'}},
+ {k:'nu',lab:'Número',v:{s:'singular',pl:'plural'},why:{s:'nombra uno solo',pl:'nombra más de uno'}},
+];
+
+/* ================= TEXTOS =================
+   [*palabra|c co i ct m s|nota]  sustantivo que se analiza en la ficha
+   [palabra|c co i ct m s]        sustantivo (cuenta para localizar y para el reto)
+   {palabra|explicación}          trampa: parece sustantivo pero no lo es (o al revés)
+   Códigos: c/p · co/ab · i/col · ct/nc · m/f · s/pl · «-» = no se analiza            */
+const LEVELS=[
+ {name:'Nivel 1 · Pistas claras',desc:'Sustantivos concretos y alguna trampa sencilla.',code:'4719',texts:[
+  'El [*rebaño|c co col ct m s] de [ovejas|c co i ct f pl] cruzó el [*puente|c co i ct m s] {bajo|Aquí es una preposición: indica lugar («debajo de»).} la [lluvia|c co i nc f s].',
+  '[Lucía|p - - - f s] guardó la [*arena|c co i nc f s] de la [playa|c co i ct f s] en un [*bote|c co i ct m s] de [cristal|c co i nc m s].',
+  'Los [*marineros|c co i ct m pl] de la [*tripulación|c co col ct f s] vieron un [banco|c co col ct m s] de [peces|c co i ct m pl] junto a la [costa|c co i ct f s].',
+  'Mi [*abuela|c co i ct f s] mezcla [harina|c co i nc f s] con [*agua|c co i nc f s|Decimos «el agua» para que suene mejor, pero es femenino: «el agua fría».] en un [cuenco|c co i ct m s] {grande|Es un adjetivo: dice cómo es el cuenco.}.',
+ ]},
+ {name:'Nivel 2 · Trampas',desc:'Adjetivos, verbos y sustantivos abstractos.',code:'2850',texts:[
+  'El [*niño|c co i ct m s] {valiente|Es un adjetivo: dice cómo es el niño.} sintió [*miedo|c ab i nc m s] ante la [*jauría|c co col ct f s] de [perros|c co i ct m pl].',
+  'La [*paciencia|c ab i nc f s] de la [*maestra|c co i ct f s] es {enorme|Es un adjetivo: dice cómo es la paciencia.}: nunca {pierde|Es un verbo: expresa una acción.} la [*calma|c ab i nc f s].',
+  'La [*generosidad|c ab i nc f s] de los [*vecinos|c co i ct m pl] llenó de [flores|c co i ct f pl] el [*vecindario|c co col ct m s].',
+  'Los [*problemas|c ab i ct m pl|Termina en -a, pero es masculino: «el problema».] del [cuaderno|c co i ct m s] {parecían|Es un verbo.} {difíciles|Es un adjetivo: dice cómo eran los problemas.}, pero [Gonzalo|p - - - m s] los resolvió con [*ingenio|c ab i nc m s].',
+ ]},
+ {name:'Nivel 3 · Expertos',desc:'Palabras que se convierten en sustantivos y casos difíciles de género y número.',code:'6193',texts:[
+  'El [*saber|c ab i nc m s|Normalmente es un verbo, pero aquí va con «el» y funciona como sustantivo.] de mi [abuelo|c co i ct m s] {asombra|Es un verbo.} a toda la [*familia|c co col ct f s].',
+  'Del [*águila|c co i ct f s|Decimos «el águila», pero es femenino: «el águila blanca».] {real|Es un adjetivo: dice qué tipo de águila es.} {admiramos|Es un verbo.} la [*belleza|c ab i nc f s] de sus [plumas|c co i ct f pl].',
+  'Los [*paraguas|c co i ct m pl|«Paraguas» no cambia en plural: es el artículo «los» el que indica plural.] de la [tienda|c co i ct f s] se {agotaron|Es un verbo.} por el [*temporal|c co i ct m s|Aquí «temporal» va con «el» y es un sustantivo: la tormenta.].',
+  'Mi [*hermana|c co i ct f s] {mayor|Es un adjetivo: dice cómo es la hermana.} nos {contó|Es un verbo.} el [*porqué|c ab i ct m s|Con «el» delante, «porqué» es un sustantivo: significa «la razón» (se escribe junto y con tilde).] de su [*decisión|c ab i ct f s].',
+ ]},
+];
+const RX=/\[[^\]]+\]|\{[^}]+\}|[.,;:!?]|[^\s\[\{.,;:!?]+/g;
+const CODES=[['c','p'],['co','ab'],['i','col'],['ct','nc'],['m','f'],['s','pl']];
+function parse(t){
+  return [...t.matchAll(RX)].map(m=>{
+    const s=m[0];
+    if(s[0]==='['){const [w0,codes,note]=s.slice(1,-1).split('|');const star=w0[0]==='*',w=star?w0.slice(1):w0;
+      const f={};(codes||'').split(' ').forEach((c,i)=>{if(c&&c!=='-')f[FEAT[i].k]=c});
+      return {type:'noun',w,star,f,note:note||''}}
+    if(s[0]==='{'){const [w,note]=s.slice(1,-1).split('|');return {type:'trap',w,note}}
+    if(/^[.,;:!?]$/.test(s))return {type:'punct',w:s};
+    return {type:'word',w:s};
+  });
+}
+const plain=toks=>toks.map(t=>t.w).join(' ').replace(/ ([.,;:!?])/g,'$1');
+
+/* ================= MISIÓN ================= */
+const CLUES=[
+ 'En la <b>bolsa</b> del culpable hay un sustantivo <b>colectivo</b>.',
+ 'En la <b>nota</b> del culpable hay un sustantivo <b>abstracto</b> en <b>plural</b>.',
+ 'El <b>apodo</b> del culpable es una palabra que normalmente <b>no es un sustantivo</b>, pero con el artículo delante funciona como sustantivo.',
+];
+const SUSPECTS=[
+ {n:'El Zorro',e:'🦊',bag:'una baraja, una linterna y unos guantes',note:'Me llevo vuestras ilusiones.',ok:[1,1,0],
+  why:['«baraja» es colectivo: un conjunto de cartas','«ilusiones» es abstracto y plural','«zorro» ya es un sustantivo, así que no cumple la pista 3']},
+ {n:'La Sabia',e:'🦉',bag:'unas llaves, un mapa y una lupa',note:'Gracias por las ideas.',ok:[0,1,1],
+  why:['«llaves», «mapa» y «lupa» son individuales, así que no cumple la pista 1','«ideas» es abstracto y plural','«sabia» es un adjetivo; con «la» funciona como sustantivo']},
+ {n:'El Porqué',e:'🎩',bag:'un ramo, una cuerda y un reloj',note:'Me llevo vuestros sueños.',ok:[1,1,1],
+  why:['«ramo» es colectivo: un conjunto de flores','«sueños» es abstracto y plural','«porqué» normalmente no es sustantivo; con «el» delante, sí']},
+ {n:'El Saber',e:'📚',bag:'un manojo de llaves, una linterna y un cuaderno',note:'¡Volveré pronto!',ok:[1,0,1],
+  why:['«manojo» es colectivo: un conjunto de llaves','en «¡Volveré pronto!» no hay ningún sustantivo, así que no cumple la pista 2','«saber» es un verbo; con «el» funciona como sustantivo']},
+];
+const clueOpen=l=>store.get(`${P}clue-${l}`)==='1';
+
+/* ================= PROGRESO ================= */
+const bestOf=(l,t)=>{const v=store.get(`${P}best-${l}-${t}`);return v?JSON.parse(v):null};
+const RANKS=[[0,'🔍','Aprendiz'],[400,'🕵️','Inspector/a'],[1000,'🧠','Detective'],[1600,'🏅','Comisario/a']];
+function totalPts(){let s=0;LEVELS.forEach((L,l)=>L.texts.forEach((_,t)=>{const b=bestOf(l,t);if(b)s+=b.pts}));return s}
+function maxPts(toks){const n=toks.filter(t=>t.type==='noun');return n.length*10+n.filter(t=>t.star).length*(FEAT.length*5+10)+20}
+const starsFor=r=>r>=.9?3:r>=.7?2:r>=.4?1:0;
+
+/* ================= MENÚ ================= */
+function renderMenu(){
+  $('#menu').classList.remove('hidden');$('#case').classList.add('hidden');
+  $('#back').classList.add('hidden');$('#pts').classList.add('hidden');
+  $('#title').innerHTML='🕵️ Expedientes <small>3.er ciclo · experto</small>';
+  const tot=totalPts();let r=0;RANKS.forEach((x,i)=>{if(tot>=x[0])r=i});
+  const nxt=RANKS[r+1];const pct=nxt?Math.round((tot-RANKS[r][0])/(nxt[0]-RANKS[r][0])*100):100;
+  $('#rank').innerHTML=`<span class="badge emo">${RANKS[r][1]}</span><div style="flex:1"><small>Tu rango</small><br><b>${RANKS[r][2]}</b> · ${tot} puntos
+    <div class="meter"><i style="width:${pct}%"></i></div><small>${nxt?`Te faltan ${nxt[0]-tot} puntos para ${nxt[2]} ${nxt[1]}`:'¡Has llegado al rango más alto!'}</small></div>`;
+  $('#levels').innerHTML=LEVELS.map((L,l)=>{
+    const done=L.texts.map((_,t)=>bestOf(l,t));const all=done.every(Boolean);
+    return `<div class="level"><div class="lhead"><div><h2>${L.name}</h2><p>${L.desc}</p></div>
+      ${(()=>{const op=clueOpen(l),inner=`<span class="emo">${op?'🔓':'🔐'}</span>${[...L.code].map((d,t)=>`<span class="${done[t]?'open':''}">${done[t]?d:'?'}</span>`).join('')}`;
+        return all&&!op?`<button class="safe" data-open="${l}" title="Abrir la caja fuerte">${inner}<span style="width:auto;padding:0 8px;background:#FFD23F;color:var(--navy)">Abrir</span></button>`
+          :`<div class="safe ${op?'done':''}">${inner}</div>`})()}</div>
+      ${clueOpen(l)?`<div class="cl" style="background:#E9EBFF;color:var(--ink)"><span class="emo">🗝️</span><span>Pista ${l+1}: ${CLUES[l]}</span></div>`:''}
+      <div class="files">${L.texts.map((_,t)=>{const b=done[t];
+        return `<button class="file ${b?'done':''}" data-l="${l}" data-t="${t}"><span class="num">Expediente</span>${l+1}·${t+1}
+          <span class="st emo">${b?'⭐'.repeat(b.stars)+'☆'.repeat(3-b.stars):'📁'}</span></button>`}).join('')}</div></div>`}).join('');
+  $('#levels').insertAdjacentHTML('beforeend',missionHTML());
+  $$('.file').forEach(b=>b.addEventListener('click',()=>{ac();sfx.tap();openCase(+b.dataset.l,+b.dataset.t)}));
+  $$('[data-open]').forEach(b=>b.addEventListener('click',()=>{ac();sfx.tap();keypad(+b.dataset.open)}));
+  $$('[data-acc]').forEach(b=>b.addEventListener('click',()=>{ac();accuse(+b.dataset.acc)}));
+  window.scrollTo(0,0);
+}
+
+/* ================= EXPEDIENTE ================= */
+let C=null;
+function openCase(l,t){
+  const toks=parse(LEVELS[l].texts[t]);
+  C={l,t,toks,phase:1,p1:0,p2:0,p3:0,sel:new Set(),fi:0,max:maxPts(toks)};
+  C.stars=toks.map((x,i)=>x.type==='noun'&&x.star?i:-1).filter(i=>i>=0);
+  $('#menu').classList.add('hidden');$('#case').classList.remove('hidden');
+  $('#back').classList.remove('hidden');$('#pts').classList.remove('hidden');
+  $('#title').innerHTML=`📁 Expediente ${l+1}·${t+1}`;
+  phase1();
+}
+function setPts(){$('#pts').textContent=(C.p1+C.p2+C.p3)+' pts'}
+function setSteps(n){$$('#steps div').forEach((d,i)=>{d.className=i+1<n?'ok':i+1===n?'on':''})}
+function textHTML(cls=()=>'',click=true){
+  return C.toks.map((x,i)=>x.type==='punct'?`<span class="pu">${x.w}</span>`:`${i&&C.toks[i].type!=='punct'?' ':''}<span class="w ${cls(x,i)} ${click?'':'dis'}" data-i="${i}">${x.w}</span>`)
+    .join('').replace(/^ /,'').replace(/(<\/span>)([.,;:!?])/g,'$1$2');
+}
+function spkBtn(text){return canSpeak?`<button class="spk emo" data-say="${text.replace(/"/g,'&quot;')}">🔊</button>`:''}
+function bindSpk(){$$('.spk').forEach(b=>b.addEventListener('click',()=>say(b.dataset.say)))}
+
+/* ---- FASE 1: localizar ---- */
+function phase1(){
+  setSteps(1);setPts();
+  const sh=$('#sheet');
+  sh.innerHTML=`<span class="tag">FASE 1 · LOCALIZA</span>
+    <div class="instr">Toca todos los sustantivos del texto ${spkBtn(plain(C.toks))}</div>
+    <div class="sub">No sabes cuántos hay. Si te equivocas, vuelve a tocar la palabra para desmarcarla.</div>
+    <div class="txt" id="txt">${textHTML()}</div>
+    <div class="actions"><span class="count" id="cnt">Has marcado 0 palabras</span><button class="btn" id="chk" disabled>Comprobar</button></div>
+    <div class="notes" id="notes"></div>`;
+  bindSpk();
+  $$('#txt .w').forEach(w=>w.addEventListener('click',()=>{
+    if(C.phase!==1||C.checked)return;sfx.tap();const i=+w.dataset.i;
+    C.sel.has(i)?C.sel.delete(i):C.sel.add(i);w.classList.toggle('sel');
+    $('#cnt').textContent=`Has marcado ${C.sel.size} palabra${C.sel.size===1?'':'s'}`;$('#chk').disabled=!C.sel.size;
+  }));
+  C.checked=false;
+  $('#chk').addEventListener('click',check1);
+}
+function check1(){
+  C.checked=true;const notes=[];let good=0,bad=0,miss=0;
+  C.toks.forEach((x,i)=>{
+    const w=$(`#txt .w[data-i="${i}"]`);if(!w)return;w.classList.add('dis');
+    const isN=x.type==='noun',s=C.sel.has(i);w.classList.remove('sel');
+    if(isN&&s){w.classList.add('good');good++}
+    else if(isN&&!s){w.classList.add('miss');miss++;notes.push(['miss',`<b>«${x.w}»</b>`,`Es un sustantivo y se te ha escapado.${x.note?' '+x.note:''}`])}
+    else if(!isN&&s){w.classList.add('bad');bad++;notes.push(['ko',`<b>«${x.w}»</b>`,x.type==='trap'?x.note:'No es un sustantivo.'])}
+    else if(x.type==='trap')notes.push(['info',`<b>«${x.w}»</b>`,`¡Bien, no has caído en la trampa! ${x.note}`]);
+  });
+  C.p1=Math.max(0,good*10-bad*5);setPts();
+  (bad||miss)?sfx.bad():sfx.good();
+  const total=good+miss;
+  $('#notes').innerHTML=`<div class="note ${bad||miss?'info':'ok'}"><span class="emo">${bad||miss?'🔎':'✅'}</span><span>Has encontrado <b>${good} de ${total}</b> sustantivos${bad?` y has marcado <b>${bad}</b> palabra${bad>1?'s':''} que no lo ${bad>1?'son':'es'}`:''}. <b>+${C.p1} puntos</b>.</span></div>`+
+    notes.map(([c,a,b])=>`<div class="note ${c}"><span>${a}</span><span>${b}</span></div>`).join('');
+  const a=$('#sheet .actions');a.innerHTML=`<span class="count">🟩 bien · 🟨 se te escapó · 🟥 no es sustantivo</span><button class="btn go" id="nx">Analizar ➜</button>`;
+  $('#nx').addEventListener('click',()=>{sfx.tap();C.phase=2;C.fi=0;phase2()});
+}
+
+/* ---- FASE 2: ficha en blanco ---- */
+function phase2(){
+  setSteps(2);setPts();
+  const idx=C.stars[C.fi],x=C.toks[idx];C.ans={};
+  const sh=$('#sheet');
+  sh.innerHTML=`<span class="tag">FASE 2 · ANALIZA</span>
+    <div class="instr">Rellena la ficha del sustantivo <span class="prog">· Ficha ${C.fi+1} de ${C.stars.length}</span></div>
+    <div class="sub">Elige una opción en cada fila. Cuando la tengas completa, comprueba.</div>
+    <div class="ctx">${textHTML((y,i)=>i===idx?'hl':'',false)}</div>
+    <div class="fcard"><div class="fword"><b>${x.w}</b><span>sustantivo</span></div>
+      ${FEAT.map(F=>`<div class="rlab">${F.lab}</div><div class="ropts" data-k="${F.k}">${Object.entries(F.v).map(([c,l])=>`<button class="ch" data-c="${c}">${l}</button>`).join('')}</div>`).join('')}
+    </div>
+    <div class="actions"><span class="count" id="left">Faltan ${FEAT.length} filas</span><button class="btn" id="chk" disabled>Comprobar ficha</button></div>
+    <div class="notes" id="notes"></div>`;
+  $$('.ropts').forEach(r=>$$('.ch',r).forEach(b=>b.addEventListener('click',()=>{
+    if(C.fchecked)return;sfx.tap();$$('.ch',r).forEach(o=>o.classList.remove('sel'));b.classList.add('sel');C.ans[r.dataset.k]=b.dataset.c;
+    const left=FEAT.length-Object.keys(C.ans).length;$('#left').textContent=left?`Faltan ${left} fila${left>1?'s':''}`:'¡Ficha completa!';$('#chk').disabled=!!left;
+  })));
+  C.fchecked=false;
+  $('#chk').addEventListener('click',()=>check2(x));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function check2(x){
+  C.fchecked=true;let ok=0;const notes=[];
+  FEAT.forEach(F=>{
+    const r=$(`.ropts[data-k="${F.k}"]`),right=x.f[F.k],mine=C.ans[F.k];
+    $$('.ch',r).forEach(b=>{b.disabled=true;b.classList.remove('sel');
+      if(b.dataset.c===mine)b.classList.add(mine===right?'good':'bad');else if(b.dataset.c===right)b.classList.add('right')});
+    if(mine===right)ok++;else notes.push(['ko',`<b>${F.lab}:</b>`,`es <b>${F.v[right]}</b> porque ${F.why[right]}.`]);
+  });
+  const perfect=ok===FEAT.length,pts=ok*5+(perfect?10:0);C.p2+=pts;setPts();
+  perfect?sfx.good():sfx.bad();
+  const line=FEAT.map(F=>F.v[x.f[F.k]]).join(', ');
+  $('#notes').innerHTML=`<div class="note ${perfect?'ok':'info'}"><span class="emo">${perfect?'🏆':'📋'}</span><span>${perfect?'¡Ficha perfecta!':`${ok} de ${FEAT.length} filas bien.`} <b>+${pts} puntos</b>.</span></div>`+
+    notes.map(([c,a,b])=>`<div class="note ${c}"><span>${a}</span><span>${b}</span></div>`).join('')+
+    (x.note?`<div class="note info"><span class="emo">💡</span><span>${x.note}</span></div>`:'')+
+    `<div class="note info"><span class="emo">✍️</span><span><b>${x.w}:</b> sustantivo ${line}.</span></div>`;
+  const last=C.fi>=C.stars.length-1;
+  const a=$('#sheet .actions');a.innerHTML=`<button class="btn go" id="nx">${last?'Reto final ➜':'Siguiente ficha ➜'}</button>`;
+  $('#nx').addEventListener('click',()=>{sfx.tap();if(last){C.phase=3;phase3()}else{C.fi++;phase2()}});
+}
+
+/* ---- FASE 3: reto inverso ---- */
+function combos(arr,k){const out=[];(function rec(s,acc){if(acc.length===k){out.push(acc);return}for(let i=s;i<arr.length;i++)rec(i+1,[...acc,arr[i]])})(0,[]);return out}
+function makeClue(){
+  const nouns=C.toks.map((x,i)=>({x,i})).filter(o=>o.x.type==='noun');
+  for(const tgt of shuffle(nouns.filter(o=>o.x.star))){
+    const keys=FEAT.map(F=>F.k).filter(k=>k!=='pc'&&tgt.x.f[k]);
+    for(const k of [3,2,4,5]){
+      for(const cb of shuffle(combos(keys,k-1))){
+        const set=['pc',...cb];
+        const match=nouns.filter(o=>set.every(s=>o.x.f[s]===tgt.x.f[s]));
+        if(match.length===1)return {i:tgt.i,set};
+      }
+    }
+  }
+  return null;
+}
+function phase3(){
+  setSteps(3);setPts();
+  const clue=makeClue();
+  if(!clue){summary();return}
+  const x=C.toks[clue.i];
+  const desc=clue.set.map(k=>FEAT.find(F=>F.k===k).v[x.f[k]]);
+  const descTxt=desc.slice(0,-1).join(', ')+' y '+desc[desc.length-1];
+  const sh=$('#sheet');
+  sh.innerHTML=`<span class="tag">FASE 3 · RETO FINAL</span>
+    <div class="clue">🎯 Busca en el texto un sustantivo <b>${descTxt}</b>. ${spkBtn('Busca en el texto un sustantivo '+descTxt)}</div>
+    <div class="sub">Solo tienes un intento. ¡Piensa antes de tocar!</div>
+    <div class="txt" id="txt">${textHTML()}</div>
+    <div class="actions"></div><div class="notes" id="notes"></div>`;
+  bindSpk();
+  let done=false;
+  $$('#txt .w').forEach(w=>w.addEventListener('click',()=>{
+    if(done)return;done=true;const i=+w.dataset.i,ok=i===clue.i;
+    $$('#txt .w').forEach(o=>o.classList.add('dis'));
+    w.classList.add(ok?'good':'bad');if(!ok)$(`#txt .w[data-i="${clue.i}"]`).classList.add('miss');
+    if(ok){C.p3=20;sfx.good()}else{sfx.bad();$('#txt').classList.add('shake')}
+    setPts();
+    const y=C.toks[i];
+    let why='';
+    if(!ok){
+      if(y.type!=='noun')why=`«${y.w}» no es un sustantivo.`;
+      else{const diff=clue.set.filter(k=>y.f[k]!==x.f[k]).map(k=>{const F=FEAT.find(F=>F.k===k);return y.f[k]?`es ${F.v[y.f[k]]}`:`no encaja en «${F.v[x.f[k]]}»`});
+        why=`«${y.w}» no encaja: ${diff.join(', ')}.`}
+    }
+    $('#notes').innerHTML=`<div class="note ${ok?'ok':'ko'}"><span class="emo">${ok?'🎯':'❌'}</span><span>${ok?`¡Exacto! <b>${x.w}</b> es un sustantivo ${descTxt}. <b>+20 puntos</b>.`:`${why} La respuesta era <b>${x.w}</b>.`}</span></div>`;
+    $('#sheet .actions').innerHTML=`<button class="btn go" id="nx">Cerrar el expediente ➜</button>`;
+    $('#nx').addEventListener('click',()=>{sfx.tap();summary()});
+  }));
+}
+
+/* ---- RESUMEN ---- */
+function summary(){
+  setSteps(4);
+  const pts=C.p1+C.p2+C.p3,st=starsFor(pts/C.max),L=LEVELS[C.l];
+  const prev=bestOf(C.l,C.t),first=!prev;
+  if(!prev||pts>prev.pts)store.set(`${P}best-${C.l}-${C.t}`,JSON.stringify({pts,stars:st}));
+  const allDone=L.texts.every((_,t)=>bestOf(C.l,t));
+  const msg=['Repasa las explicaciones y vuelve a intentarlo.','Buen trabajo, pero se te han escapado pistas.','¡Muy buen trabajo de detective!','¡Expediente resuelto a la perfección!'][st];
+  const nextT=C.t+1<L.texts.length?[C.l,C.t+1]:C.l+1<LEVELS.length?[C.l+1,0]:null;
+  $('#sheet').innerHTML=`<span class="tag">EXPEDIENTE CERRADO</span><div class="sum">
+    <div class="stars emo">${[0,1,2].map(i=>`<span class="${i<st?'':'off'}">⭐</span>`).join('')}</div>
+    <h2>${pts} de ${C.max} puntos</h2><p style="font-size:20px">${msg}</p>
+    ${prev&&pts>prev.pts?'<p style="font-size:18px;margin-top:6px">🎉 ¡Has mejorado tu récord!</p>':''}
+    <div class="rows"><div><span>🔎 Localizar</span><b>${C.p1}</b></div><div><span>📋 Fichas</span><b>${C.p2}</b></div><div><span>🎯 Reto final</span><b>${C.p3}</b></div>
+      <div class="tot"><span>Total</span><span>${pts}</span></div></div>
+    <div class="digit">Cifra de la caja fuerte: <span>${L.code[C.t]}</span></div>
+    ${allDone&&!clueOpen(C.l)?`<div class="vault">🔐 <b>¡Ya tienes las 4 cifras del ${L.name.split(' ·')[0]}!</b> Vuelve a los expedientes y abre la caja fuerte para conseguir una pista de la misión.</div>`:''}
+    <div class="actions" style="justify-content:center"><button class="btn alt" id="again">🔁 Repetir</button><button class="btn alt" id="menuB">📂 Expedientes</button>
+      ${nextT?'<button class="btn go" id="nextB">Siguiente expediente ➜</button>':''}</div></div>`;
+  if(allDone&&first){sfx.win();confetti()}else if(st>=2){sfx.win();if(st===3)confetti()}else sfx.good();
+  $('#again').addEventListener('click',()=>{sfx.tap();openCase(C.l,C.t)});
+  $('#menuB').addEventListener('click',()=>{sfx.tap();renderMenu()});
+  if(nextT)$('#nextB').addEventListener('click',()=>{sfx.tap();openCase(...nextT)});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ================= MISIÓN: HTML, TECLADO, ACUSAR, DIPLOMA ================= */
+function missionHTML(){
+  const n=CLUES.filter((_,l)=>clueOpen(l)).length,solved=store.get(P+'solved')==='1';
+  return `<section class="mission"><h2>🚨 Misión: ¿Quién ha robado las palabras?</h2>
+    <p class="story">Del gran diccionario de la biblioteca han desaparecido palabras. Hay cuatro sospechosos. Cada caja fuerte guarda una pista:
+    resuelve los cuatro expedientes de un nivel, consigue las cifras y abre su caja. Con las tres pistas podrás acusar al culpable.</p>
+    ${CLUES.map((c,l)=>clueOpen(l)?`<div class="cl"><span class="emo">🗝️</span><span><b>Pista ${l+1}:</b> ${c}</span></div>`
+      :`<div class="cl lock"><span class="emo">🔒</span><span>Pista ${l+1}: abre la caja fuerte del nivel ${l+1}.</span></div>`).join('')}
+    <div class="sus">${SUSPECTS.map((x,i)=>`<div class="sc ${solved&&x.ok.every(Boolean)?'right':''}" id="sus${i}"><div class="face emo">${x.e}</div><h3>${x.n}</h3>
+      <span class="lbl">Bolsa</span><span>${x.bag}</span><span class="lbl">Nota</span><span class="note2">«${x.note}»</span>
+      <button data-acc="${i}" ${n<3?'disabled':''}>${n<3?`🔒 ${n}/3 pistas`:'Acusar'}</button></div>`).join('')}</div>
+    <div class="mres" id="mres">${solved?'<div class="cl"><span class="emo">🏆</span><span><b>¡Caso resuelto!</b> El culpable era <b>El Porqué</b>. <button class="btn go" id="dipB" style="margin-left:8px">Ver diploma</button></span></div>':''}</div>
+  </section>`;
+}
+function keypad(l){
+  const code=LEVELS[l].code;let v='';
+  const m=document.createElement('div');m.className='modal';
+  m.innerHTML=`<div class="mbox"><h3>🔐 Caja fuerte · Nivel ${l+1}</h3><p style="opacity:.75">Escribe las 4 cifras que has conseguido.</p>
+    <div class="disp">${'<span></span>'.repeat(4)}</div>
+    <div class="keys">${[1,2,3,4,5,6,7,8,9].map(d=>`<button data-d="${d}">${d}</button>`).join('')}<button data-x="c" class="emo">✖️</button><button data-d="0">0</button><button data-x="b" class="emo">⌫</button></div></div>`;
+  document.body.appendChild(m);
+  const sp=$$('.disp span',m),show=()=>sp.forEach((s,i)=>s.textContent=v[i]||'');
+  let opened=false;
+  m.addEventListener('click',e=>{const b=e.target.closest('button');if(opened)return;if(!b){if(e.target===m)m.remove();return}
+    if(b.dataset.x==='c'){m.remove();return}
+    if(b.dataset.x==='b'){v=v.slice(0,-1);show();return}
+    if(v.length<4){v+=b.dataset.d;sfx.tap();show()}
+    if(v.length===4){
+      if(v===code){opened=true;store.set(`${P}clue-${l}`,'1');sfx.open();confetti();
+        $('.mbox',m).innerHTML=`<h3>🔓 ¡Caja abierta!</h3><div class="cl" style="background:#E9EBFF;color:var(--ink);margin:14px 0"><span class="emo">🗝️</span><span><b>Pista ${l+1}:</b> ${CLUES[l]}</span></div><button class="btn go" id="okB">Guardar la pista</button>`;
+        $('#okB',m).addEventListener('click',()=>{m.remove();renderMenu();setTimeout(()=>$('.mission').scrollIntoView({behavior:'smooth'}),50)});
+      }else{sfx.bad();$('.disp',m).classList.add('shake');setTimeout(()=>{v='';show();$('.disp',m).classList.remove('shake')},600)}
+    }});
+}
+function accuse(i){
+  const x=SUSPECTS[i],ok=x.ok.every(Boolean);
+  if(ok){store.set(P+'solved','1');sfx.open();confetti();renderMenu();setTimeout(()=>{$('.mission').scrollIntoView({behavior:'smooth'});diploma()},300);return}
+  sfx.bad();$('#sus'+i).classList.add('wrong','shake');
+  const fails=x.ok.map((v,k)=>v?null:`Pista ${k+1}: ${x.why[k]}.`).filter(Boolean);
+  $('#mres').innerHTML=`<div class="cl"><span class="emo">❌</span><span><b>${x.n}</b> no puede ser. ${fails.join(' ')} ¡Revisa las pistas y vuelve a intentarlo!</span></div>`;
+}
+function diploma(){
+  const m=document.createElement('div');m.className='modal';
+  const d=new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'});
+  m.innerHTML=`<div class="dip"><div class="emo" style="font-size:60px">🏅</div><h2>Diploma de Detective de Sustantivos</h2>
+    <p>Se concede a</p><input placeholder="Escribe aquí tu nombre" aria-label="Nombre">
+    <p>por resolver el caso <b>«¿Quién ha robado las palabras?»</b> y descubrir al culpable, <b>El Porqué</b>, gracias al análisis de los sustantivos.</p>
+    <p style="opacity:.7;margin-top:8px">${d} · Expedientes · Con Ceras o Maderas</p>
+    <div class="actions noprint" style="justify-content:center"><button class="btn alt" id="prB">🖨️ Imprimir</button><button class="btn go" id="clB">Cerrar</button></div></div>`;
+  document.body.appendChild(m);
+  $('#prB',m).addEventListener('click',()=>{try{window.print()}catch(e){}});
+  $('#clB',m).addEventListener('click',()=>m.remove());
+}
+document.addEventListener('click',e=>{if(e.target.id==='dipB'){sfx.tap();diploma()}});
+
+/* ================= BARRA ================= */
+let exitT=null;
+$('#back').addEventListener('click',()=>{const b=$('#back');
+  if(C&&C.phase<=3&&!b.classList.contains('ask')&&!$('.sum')){b.classList.add('ask');b.textContent='¿Salir? Toca otra vez';exitT=setTimeout(()=>{b.classList.remove('ask');b.textContent='⬅ Expedientes'},2500);return}
+  clearTimeout(exitT);b.classList.remove('ask');b.textContent='⬅ Expedientes';try{speechSynthesis.cancel()}catch(e){}renderMenu()});
+function updMute(){$('#mute').textContent=muted?'🔇':'🔊'}
+$('#mute').addEventListener('click',()=>{ac();muted=!muted;store.set(P+'mute',muted?'1':'0');updMute()});
+$('#full').addEventListener('click',()=>{try{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}});
+if(!document.fullscreenEnabled)$('#full').style.display='none';
+updMute();renderMenu();
+
+/* Contador de visitas (hits.sh): solo se activa cuando la página está publicada en la web */
+(function(){
+  if(!/^https?:$/.test(location.protocol))return;
+  var path=(location.host+location.pathname).replace(/index\.html$/,'').replace(/\/$/,'');
+  var img=new Image();img.alt='Visitas';
+  img.src='https://hits.sh/'+path+'.svg?label=Visitas&color=2fa65a&labelColor=24303f';
+  var box=document.getElementById('visitas');
+  img.onload=function(){box.innerHTML='';box.appendChild(img)};
+})();
+</script>
+</body>
+</html>
